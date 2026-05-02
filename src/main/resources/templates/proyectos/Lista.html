@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Proyectos - ADIRSA</title>
+</head>
+<body>
+
+<h1>Proyectos</h1>
+
+<a href="/">Volver al inicio</a>
+<br><br>
+
+<a href="/proyectos/nuevo">Crear nuevo proyecto</a>
+<br><br>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Cliente</th>
+        <th>Estado</th>
+        <th>Presupuesto</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="proyecto : ${proyectos}">
+
+        <td th:text="${proyecto.codigo}"></td>
+
+        <td>
+            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+               th:text="${proyecto.nombre}">
+            </a>
+        </td>
+
+        <td th:text="${proyecto.cliente}"></td>
+        <td th:text="${proyecto.estado}"></td>
+        <td th:text="${proyecto.presupuestoTotal}"></td>
+
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${#lists.isEmpty(proyectos)}">
+    No hay proyectos registrados.
+</p>
+
+</body>
+</html>

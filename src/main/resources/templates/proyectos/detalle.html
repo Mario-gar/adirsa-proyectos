@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Proyecto</title>
+</head>
+<body>
+
+<h1 th:text="${proyecto.nombre}"></h1>
+
+<p><strong>Código:</strong> <span th:text="${proyecto.codigo}"></span></p>
+<p><strong>Cliente:</strong> <span th:text="${proyecto.cliente}"></span></p>
+<p><strong>Estado:</strong> <span th:text="${proyecto.estado}"></span></p>
+<p><strong>Presupuesto:</strong> <span th:text="${proyecto.presupuestoTotal}"></span></p>
+
+<br>
+
+<a href="/proyectos">Volver</a>
+
+</body>
+</html>
