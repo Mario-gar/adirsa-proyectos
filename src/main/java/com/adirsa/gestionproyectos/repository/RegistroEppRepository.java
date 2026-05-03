@@ -12,4 +12,6 @@ public interface RegistroEppRepository extends JpaRepository<RegistroEpp, Intege
     List<RegistroEpp> findByProyectoId(Integer proyectoId);
 
     List<RegistroEpp> findByItemIdAndActivoTrue(Integer itemId);
+
+    List<RegistroEpp> findByProyectoIdAndItemIsNullAndActivoTrue(Integer proyectoId);
 }

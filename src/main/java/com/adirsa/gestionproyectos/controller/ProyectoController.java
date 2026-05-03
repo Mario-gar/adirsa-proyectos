@@ -3,6 +3,8 @@ package com.adirsa.gestionproyectos.controller;
 import com.adirsa.gestionproyectos.entity.Proyecto;
 import com.adirsa.gestionproyectos.repository.ItemProyectoRepository;
 import com.adirsa.gestionproyectos.repository.ProyectoRepository;
+import com.adirsa.gestionproyectos.repository.RegistroEppRepository;
+import com.adirsa.gestionproyectos.repository.RegistroManoObraRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +17,15 @@ public class ProyectoController {
 
     private final ProyectoRepository proyectoRepository;
     private final ItemProyectoRepository itemProyectoRepository;
+    private final RegistroManoObraRepository registroManoObraRepository;
+    private final RegistroEppRepository registroEppRepository;
 
     public ProyectoController(ProyectoRepository proyectoRepository,
-                              ItemProyectoRepository itemProyectoRepository) {
+                              ItemProyectoRepository itemProyectoRepository, RegistroManoObraRepository registroManoObraRepository, RegistroEppRepository registroEppRepository) {
         this.proyectoRepository = proyectoRepository;
         this.itemProyectoRepository = itemProyectoRepository;
+        this.registroManoObraRepository = registroManoObraRepository;
+        this.registroEppRepository = registroEppRepository;
     }
 
     @GetMapping("/proyectos")
@@ -62,6 +68,17 @@ public class ProyectoController {
         model.addAttribute("items", itemsPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", itemsPage.getTotalPages());
+
+        // 🔥 NUEVO
+        model.addAttribute(
+                "manoObraIndirecta",
+                registroManoObraRepository.findByProyectoIdAndTipoCostoAndActivoTrue(id, "INDIRECTO")
+        );
+
+        model.addAttribute(
+                "eppGlobal",
+                registroEppRepository.findByProyectoIdAndItemIsNullAndActivoTrue(id)
+        );
 
         return "proyectos/detalle";
     }

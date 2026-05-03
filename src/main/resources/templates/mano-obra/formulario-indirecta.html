@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mano de Obra Indirecta</title>
+</head>
+<body>
+
+<h1 th:text="${manoObra.id == null ? 'Registrar Mano de Obra Indirecta' : 'Editar Mano de Obra Indirecta'}"></h1>
+
+<p><strong>Proyecto:</strong> <span th:text="${proyecto.nombre}"></span></p>
+
+<form th:action="@{/proyectos/{id}/mano-obra-indirecta/guardar(id=${proyecto.id})}"
+      th:object="${manoObra}" method="post">
+
+    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{creadoEn}">
+    <input type="hidden" th:field="*{activo}">
+
+    <label>Fecha:</label><br>
+    <input type="date" th:field="*{fecha}" required>
+    <br><br>
+
+    <label>Periodo:</label><br>
+    <input type="text" th:field="*{periodo}">
+    <br><br>
+
+    <label># Planilla:</label><br>
+    <input type="text" th:field="*{numeroPlanilla}">
+    <br><br>
+
+    <label>Empleado:</label><br>
+    <input type="text" th:field="*{empleado}" required>
+    <br><br>
+
+    <label>Cargo:</label><br>
+    <input type="text" th:field="*{cargo}">
+    <br><br>
+
+    <label>Días trabajados:</label><br>
+    <input type="number" step="0.01" th:field="*{diasTrabajados}">
+    <br><br>
+
+    <label>Pago por día:</label><br>
+    <input type="number" step="0.01" th:field="*{pagoPorDia}">
+    <br><br>
+
+    <label>Incentivos:</label><br>
+    <input type="number" step="0.01" th:field="*{incentivos}">
+    <br><br>
+
+    <label>Viáticos:</label><br>
+    <input type="number" step="0.01" th:field="*{viaticos}">
+    <br><br>
+
+    <label>Préstamos:</label><br>
+    <input type="number" step="0.01" th:field="*{prestamos}">
+    <br><br>
+
+    <button type="submit">Guardar Mano de Obra Indirecta</button>
+
+</form>
+
+<br>
+
+<a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+    Volver al proyecto
+</a>
+
+</body>
+</html>

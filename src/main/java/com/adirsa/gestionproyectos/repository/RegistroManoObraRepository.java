@@ -14,4 +14,6 @@ public interface RegistroManoObraRepository extends JpaRepository<RegistroManoOb
     List<RegistroManoObra> findByItemIdAndActivoTrue(Integer itemId);
 
     List<RegistroManoObra> findByItemIdAndTipoCostoAndActivoTrue(Integer itemId, String tipoCosto);
+
+    List<RegistroManoObra> findByProyectoIdAndTipoCostoAndActivoTrue(Integer proyectoId, String tipoCosto);
 }

@@ -4,6 +4,7 @@ import com.adirsa.gestionproyectos.entity.ItemProyecto;
 import com.adirsa.gestionproyectos.entity.Proyecto;
 import com.adirsa.gestionproyectos.entity.RegistroEpp;
 import com.adirsa.gestionproyectos.repository.ItemProyectoRepository;
+import com.adirsa.gestionproyectos.repository.ProyectoRepository;
 import com.adirsa.gestionproyectos.repository.RegistroEppRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +15,14 @@ public class RegistroEppController {
 
     private final RegistroEppRepository registroEppRepository;
     private final ItemProyectoRepository itemProyectoRepository;
+    private final ProyectoRepository proyectoRepository;
 
     public RegistroEppController(RegistroEppRepository registroEppRepository,
-                                 ItemProyectoRepository itemProyectoRepository) {
+                                 ItemProyectoRepository itemProyectoRepository,
+                                 ProyectoRepository proyectoRepository) {
         this.registroEppRepository = registroEppRepository;
         this.itemProyectoRepository = itemProyectoRepository;
+        this.proyectoRepository = proyectoRepository;
     }
 
     @GetMapping("/items/{itemId}/epp/nuevo")
@@ -65,10 +69,14 @@ public class RegistroEppController {
                 .orElseThrow(() -> new RuntimeException("EPP no encontrado"));
 
         model.addAttribute("epp", epp);
-        model.addAttribute("item", epp.getItem());
         model.addAttribute("proyecto", epp.getProyecto());
 
-        return "epp/formulario";
+        if (epp.getItem() != null) {
+            model.addAttribute("item", epp.getItem());
+            return "epp/formulario";
+        }
+
+        return "epp/formulario-global";
     }
 
     @PostMapping("/epp/{id}/desactivar")
@@ -80,6 +88,46 @@ public class RegistroEppController {
         epp.setActivo(false);
         registroEppRepository.save(epp);
 
-        return "redirect:/items/" + epp.getItem().getId();
+        if (epp.getItem() != null) {
+            return "redirect:/items/" + epp.getItem().getId();
+        }
+
+        return "redirect:/proyectos/" + epp.getProyecto().getId();
+    }
+
+    @GetMapping("/proyectos/{proyectoId}/epp/nuevo")
+    public String nuevoEppGlobal(@PathVariable Integer proyectoId, Model model) {
+
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+
+        RegistroEpp epp = new RegistroEpp();
+        epp.setProyecto(proyecto);
+        epp.setItem(null);
+
+        model.addAttribute("proyecto", proyecto);
+        model.addAttribute("epp", epp);
+
+        return "epp/formulario-global";
+    }
+
+    @PostMapping("/proyectos/{proyectoId}/epp/guardar")
+    public String guardarEppGlobal(@PathVariable Integer proyectoId,
+                                   @ModelAttribute RegistroEpp epp) {
+
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+
+        epp.setProyecto(proyecto);
+        epp.setItem(null);
+
+        if (epp.getActivo() == null) {
+            epp.setActivo(true);
+        }
+
+        epp.calcular();
+        registroEppRepository.save(epp);
+
+        return "redirect:/proyectos/" + proyectoId;
     }
 }

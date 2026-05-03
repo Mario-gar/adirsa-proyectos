@@ -87,6 +87,118 @@
 
 <br>
 
+<h2>Mano de obra indirecta</h2>
+
+<a th:href="@{/proyectos/{id}/mano-obra-indirecta/nuevo(id=${proyecto.id})}">
+    + Registrar Mano de Obra Indirecta
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Periodo</th>
+        <th># Planilla</th>
+        <th>Empleado</th>
+        <th>Cargo</th>
+        <th>Días</th>
+        <th>Pago/Día</th>
+        <th>Salario Básico</th>
+        <th>Incentivos</th>
+        <th>Viáticos</th>
+        <th>Salario Bruto</th>
+        <th>Préstamos</th>
+        <th>Salario Neto</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="mo : ${manoObraIndirecta}">
+        <td th:text="${mo.fecha}"></td>
+        <td th:text="${mo.periodo}"></td>
+        <td th:text="${mo.numeroPlanilla}"></td>
+        <td th:text="${mo.empleado}"></td>
+        <td th:text="${mo.cargo}"></td>
+        <td th:text="${mo.diasTrabajados}"></td>
+        <td th:text="${mo.pagoPorDia}"></td>
+        <td th:text="${mo.salarioBasico}"></td>
+        <td th:text="${mo.incentivos}"></td>
+        <td th:text="${mo.viaticos}"></td>
+        <td th:text="${mo.salarioBruto}"></td>
+        <td th:text="${mo.prestamos}"></td>
+        <td th:text="${mo.salarioNeto}"></td>
+        <td>
+            <a th:href="@{/mano-obra/{id}/editar(id=${mo.id})}">Editar</a>
+
+            <form th:action="@{/mano-obra/{id}/desactivar(id=${mo.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${#lists.isEmpty(manoObraIndirecta)}">
+    No hay registros de mano de obra indirecta.
+</p>
+
+<hr>
+
+<h2>EPP Global del Proyecto</h2>
+
+<a th:href="@{/proyectos/{id}/epp/nuevo(id=${proyecto.id})}">
+    + Registrar EPP Global
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Vendedor</th>
+        <th># Factura</th>
+        <th>Descripción</th>
+        <th>U.M</th>
+        <th>Cantidad</th>
+        <th>C.Unit</th>
+        <th>Total</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="e : ${eppGlobal}">
+        <td th:text="${e.fecha}"></td>
+        <td th:text="${e.vendedor}"></td>
+        <td th:text="${e.numeroFactura}"></td>
+        <td th:text="${e.descripcion}"></td>
+        <td th:text="${e.unidadMedida}"></td>
+        <td th:text="${e.cantidad}"></td>
+        <td th:text="${e.costoUnitario}"></td>
+        <td th:text="${e.total}"></td>
+        <td>
+            <a th:href="@{/epp/{id}/editar(id=${e.id})}">Editar</a>
+
+            <form th:action="@{/epp/{id}/desactivar(id=${e.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${#lists.isEmpty(eppGlobal)}">
+    No hay EPP global registrado.
+</p>
+
 <div>
     <a th:if="${currentPage > 0}"
        th:href="@{/proyectos/{id}(id=${proyecto.id}, page=${currentPage - 1})}">
