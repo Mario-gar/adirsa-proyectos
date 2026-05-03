@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Detalle Presupuestado</title>
+</head>
+<body>
+
+<h1>Nuevo Detalle Presupuestado</h1>
+
+<p><strong>Proyecto:</strong> <span th:text="${proyecto.nombre}"></span></p>
+<p><strong>Ítem:</strong> <span th:text="${item.codigo}"></span> - <span th:text="${item.descripcion}"></span></p>
+
+<form th:action="@{/items/{id}/presupuesto-detalle/guardar(id=${item.id})}"
+      th:object="${detalle}"
+      method="post">
+
+    <label>Categoría:</label><br>
+    <select th:field="*{categoria}" required>
+        <option value="">Seleccione una categoría</option>
+        <option value="MATERIAL">Material</option>
+        <option value="MANO_OBRA">Mano de obra</option>
+        <option value="TRANSPORTE_EQUIPO">Transporte / Equipo</option>
+    </select>
+    <br><br>
+
+    <label>Descripción:</label><br>
+    <textarea th:field="*{descripcion}" required></textarea>
+    <br><br>
+
+    <label>Unidad de medida:</label><br>
+    <input type="text" th:field="*{unidadMedida}">
+    <br><br>
+
+    <label>Cantidad:</label><br>
+    <input type="number" step="0.01" th:field="*{cantidad}">
+    <br><br>
+
+    <label>Costo unitario:</label><br>
+    <input type="number" step="0.01" th:field="*{costoUnitario}">
+    <br><br>
+
+    <button type="submit">Guardar detalle</button>
+
+</form>
+
+<br>
+
+<a th:href="@{/items/{id}(id=${item.id})}">
+    Volver al ítem
+</a>
+
+</body>
+</html>

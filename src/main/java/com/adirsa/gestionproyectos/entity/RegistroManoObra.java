@@ -67,6 +67,9 @@ public class RegistroManoObra {
     @Column(name = "salario_neto", precision = 14, scale = 2)
     private BigDecimal salarioNeto = BigDecimal.ZERO;
 
+    @Column(nullable = false)
+    private Boolean activo = true;
+
     @ManyToOne
     @JoinColumn(name = "registrado_por")
     private Usuario registradoPor;
@@ -76,4 +79,33 @@ public class RegistroManoObra {
 
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
+
+    @Column(name = "tipo_costo", nullable = false, length = 50)
+    private String tipoCosto = "DIRECTO";
+
+    @PrePersist
+    public void prePersist() {
+        this.creadoEn = LocalDateTime.now();
+        calcular();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.actualizadoEn = LocalDateTime.now();
+        calcular();
+    }
+
+    public void calcular() {
+        if (diasTrabajados == null) diasTrabajados = BigDecimal.ZERO;
+        if (pagoPorDia == null) pagoPorDia = BigDecimal.ZERO;
+        if (incentivos == null) incentivos = BigDecimal.ZERO;
+        if (viaticos == null) viaticos = BigDecimal.ZERO;
+        if (prestamos == null) prestamos = BigDecimal.ZERO;
+        if (activo == null) activo = true;
+        if (tipoCosto == null || tipoCosto.isBlank()) tipoCosto = "DIRECTO";
+
+        salarioBasico = diasTrabajados.multiply(pagoPorDia);
+        salarioBruto = salarioBasico.add(incentivos).add(viaticos);
+        salarioNeto = salarioBruto.subtract(prestamos);
+    }
 }

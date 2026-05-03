@@ -20,12 +20,10 @@ public class RegistroMaterial {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // 🔗 Relación con proyecto
     @ManyToOne
     @JoinColumn(name = "proyecto_id", nullable = false)
     private Proyecto proyecto;
 
-    // 🔗 Relación con ítem
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private ItemProyecto item;
@@ -63,7 +61,9 @@ public class RegistroMaterial {
     @Column(precision = 14, scale = 2)
     private BigDecimal total = BigDecimal.ZERO;
 
-    // 🔗 Usuario que registró
+    @Column(nullable = false)
+    private Boolean activo = true;
+
     @ManyToOne
     @JoinColumn(name = "registrado_por")
     private Usuario registradoPor;
@@ -73,4 +73,26 @@ public class RegistroMaterial {
 
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
+
+    @PrePersist
+    public void prePersist() {
+        this.creadoEn = LocalDateTime.now();
+        calcular();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.actualizadoEn = LocalDateTime.now();
+        calcular();
+    }
+
+    public void calcular() {
+        if (cantidad == null) cantidad = BigDecimal.ZERO;
+        if (costoUnitario == null) costoUnitario = BigDecimal.ZERO;
+        if (iva == null) iva = BigDecimal.ZERO;
+        if (activo == null) activo = true;
+
+        subtotal = cantidad.multiply(costoUnitario);
+        total = subtotal.add(iva);
+    }
 }

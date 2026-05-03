@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar EPP</title>
+</head>
+<body>
+
+<h1 th:text="${epp.id == null ? 'Registrar EPP' : 'Editar EPP'}"></h1>
+
+<p><strong>Proyecto:</strong> <span th:text="${proyecto.nombre}"></span></p>
+<p><strong>Ítem:</strong> <span th:text="${item.descripcion}"></span></p>
+
+<form th:action="@{/items/{id}/epp/guardar(id=${item.id})}"
+      th:object="${epp}" method="post">
+
+    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{creadoEn}">
+    <input type="hidden" th:field="*{activo}">
+
+    <label>Fecha:</label><br>
+    <input type="date" th:field="*{fecha}" required>
+    <br><br>
+
+    <label>Vendedor:</label><br>
+    <input type="text" th:field="*{vendedor}">
+    <br><br>
+
+    <label># Recibo / Factura:</label><br>
+    <input type="text" th:field="*{numeroFactura}">
+    <br><br>
+
+    <label>Descripción:</label><br>
+    <textarea th:field="*{descripcion}" required></textarea>
+    <br><br>
+
+    <label>Unidad de medida:</label><br>
+    <input type="text" th:field="*{unidadMedida}">
+    <br><br>
+
+    <label>Cantidad:</label><br>
+    <input type="number" step="0.01" th:field="*{cantidad}">
+    <br><br>
+
+    <label>Costo unitario:</label><br>
+    <input type="number" step="0.01" th:field="*{costoUnitario}">
+    <br><br>
+
+    <button type="submit">Guardar EPP</button>
+
+</form>
+
+<br>
+
+<a th:href="@{/items/{id}(id=${item.id})}">Volver al ítem</a>
+
+</body>
+</html>

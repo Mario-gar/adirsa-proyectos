@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Ítem</title>
+</head>
+<body>
+
+<h1>Detalle del Ítem</h1>
+
+<p><strong>Proyecto:</strong> <span th:text="${proyecto.nombre}"></span></p>
+<p><strong>Código:</strong> <span th:text="${item.codigo}"></span></p>
+<p><strong>Descripción:</strong> <span th:text="${item.descripcion}"></span></p>
+<p><strong>Unidad:</strong> <span th:text="${item.unidadMedida}"></span></p>
+<p><strong>Cantidad:</strong> <span th:text="${item.cantidadPresupuestada}"></span></p>
+
+<hr>
+
+<h2>Costos presupuestados</h2>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Categoría</th>
+        <th>Costo Unitario</th>
+        <th>Total</th>
+    </tr>
+    <tr>
+        <td>Materiales</td>
+        <td th:text="${item.materialUnitario}"></td>
+        <td th:text="${item.materialTotal}"></td>
+    </tr>
+    <tr>
+        <td>Mano de obra</td>
+        <td th:text="${item.manoObraUnitario}"></td>
+        <td th:text="${item.manoObraTotal}"></td>
+    </tr>
+    <tr>
+        <td>Transporte / equipo</td>
+        <td th:text="${item.transporteEquipoUnitario}"></td>
+        <td th:text="${item.transporteEquipoTotal}"></td>
+    </tr>
+</table>
+
+<br>
+
+<p><strong>Precio unitario:</strong> <span th:text="${item.precioUnitarioPresupuestado}"></span></p>
+<p><strong>Total presupuestado:</strong> <span th:text="${item.totalPresupuestado}"></span></p>
+
+<hr>
+
+<h2>EPP del ítem</h2>
+
+<a th:href="@{/items/{id}/epp/nuevo(id=${item.id})}">
+    + Registrar EPP
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Vendedor</th>
+        <th># Recibo / Factura</th>
+        <th>Descripción</th>
+        <th>U.M</th>
+        <th>Cantidad</th>
+        <th>C. Unit</th>
+        <th>Sub Total</th>
+        <th>Acciones</th> <!-- 🔥 ESTA ES NUEVA -->
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="e : ${epps}">
+        <td th:text="${e.fecha}"></td>
+        <td th:text="${e.vendedor}"></td>
+        <td th:text="${e.numeroFactura}"></td>
+        <td th:text="${e.descripcion}"></td>
+        <td th:text="${e.unidadMedida}"></td>
+        <td th:text="${e.cantidad}"></td>
+        <td th:text="${e.costoUnitario}"></td>
+        <td th:text="${e.total}"></td>
+
+        <!-- 🔥 BOTONES -->
+        <td>
+            <a th:href="@{/epp/{id}/editar(id=${e.id})}">Editar</a>
+
+            <form th:action="@{/epp/{id}/desactivar(id=${e.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Materiales del ítem</h2>
+
+<a th:href="@{/items/{id}/materiales/nuevo(id=${item.id})}">
+    + Registrar Material
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Proveedor</th>
+        <th>Tipo compra</th>
+        <th># Factura</th>
+        <th>Descripción</th>
+        <th>U.M</th>
+        <th>Cantidad</th>
+        <th>C. Unit</th>
+        <th>Subtotal</th>
+        <th>IVA</th>
+        <th>Total</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="m : ${materiales}">
+        <td th:text="${m.fecha}"></td>
+        <td th:text="${m.proveedor}"></td>
+        <td th:text="${m.tipoCompra}"></td>
+        <td th:text="${m.numeroFactura}"></td>
+        <td th:text="${m.descripcion}"></td>
+        <td th:text="${m.unidadMedida}"></td>
+        <td th:text="${m.cantidad}"></td>
+        <td th:text="${m.costoUnitario}"></td>
+        <td th:text="${m.subtotal}"></td>
+        <td th:text="${m.iva}"></td>
+        <td th:text="${m.total}"></td>
+        <td>
+            <a th:href="@{/materiales/{id}/editar(id=${m.id})}">Editar</a>
+
+            <form th:action="@{/materiales/{id}/desactivar(id=${m.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Mano de obra del ítem</h2>
+
+<a th:href="@{/items/{id}/mano-obra/nuevo(id=${item.id})}">
+    + Registrar Mano de Obra
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Periodo</th>
+        <th># Planilla</th>
+        <th>Empleado</th>
+        <th>Cargo</th>
+        <th>Días</th>
+        <th>Pago/Día</th>
+        <th>Salario Básico</th>
+        <th>Incentivos</th>
+        <th>Viáticos</th>
+        <th>Salario Bruto</th>
+        <th>Préstamos</th>
+        <th>Salario Neto</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="mo : ${manoObras}">
+        <td th:text="${mo.fecha}"></td>
+        <td th:text="${mo.periodo}"></td>
+        <td th:text="${mo.numeroPlanilla}"></td>
+        <td th:text="${mo.empleado}"></td>
+        <td th:text="${mo.cargo}"></td>
+        <td th:text="${mo.diasTrabajados}"></td>
+        <td th:text="${mo.pagoPorDia}"></td>
+        <td th:text="${mo.salarioBasico}"></td>
+        <td th:text="${mo.incentivos}"></td>
+        <td th:text="${mo.viaticos}"></td>
+        <td th:text="${mo.salarioBruto}"></td>
+        <td th:text="${mo.prestamos}"></td>
+        <td th:text="${mo.salarioNeto}"></td>
+        <td>
+            <a th:href="@{/mano-obra/{id}/editar(id=${mo.id})}">Editar</a>
+
+            <form th:action="@{/mano-obra/{id}/desactivar(id=${mo.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Transporte / Equipo del ítem</h2>
+
+<a th:href="@{/items/{id}/transporte-equipo/nuevo(id=${item.id})}">
+    + Registrar Transporte / Equipo
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Proveedor</th>
+        <th># Factura</th>
+        <th>Descripción</th>
+        <th>U.M</th>
+        <th>Cantidad</th>
+        <th>C.Unit</th>
+        <th>Sub.Total</th>
+        <th>Clasificación</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="te : ${transportesEquipos}">
+        <td th:text="${te.fecha}"></td>
+        <td th:text="${te.proveedor}"></td>
+        <td th:text="${te.numeroFactura}"></td>
+        <td th:text="${te.descripcion}"></td>
+        <td th:text="${te.unidadMedida}"></td>
+        <td th:text="${te.cantidad}"></td>
+        <td th:text="${te.costoUnitario}"></td>
+        <td th:text="${te.total}"></td>
+        <td th:text="${te.clasificacion}"></td>
+        <td>
+            <a th:href="@{/transporte-equipo/{id}/editar(id=${te.id})}">Editar</a>
+
+            <form th:action="@{/transporte-equipo/{id}/desactivar(id=${te.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${#lists.isEmpty(transportesEquipos)}">
+    No hay registros de transporte/equipo.
+</p>
+
+<p th:if="${#lists.isEmpty(manoObras)}">
+    No hay registros de mano de obra.
+</p>
+
+<p th:if="${#lists.isEmpty(materiales)}">
+    No hay registros de materiales.
+</p>
+
+<p th:if="${#lists.isEmpty(epps)}">
+    No hay registros de EPP.
+</p>
+
+<hr>
+
+<br>
+
+<a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+    Volver al proyecto
+</a>
+
+</body>
+</html>

@@ -1,49 +1,90 @@
 package com.adirsa.gestionproyectos.controller;
 
 import com.adirsa.gestionproyectos.entity.Proyecto;
+import com.adirsa.gestionproyectos.repository.ItemProyectoRepository;
 import com.adirsa.gestionproyectos.repository.ProyectoRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @Controller
 public class ProyectoController {
 
     private final ProyectoRepository proyectoRepository;
+    private final ItemProyectoRepository itemProyectoRepository;
 
-    public ProyectoController(ProyectoRepository proyectoRepository) {
+    public ProyectoController(ProyectoRepository proyectoRepository,
+                              ItemProyectoRepository itemProyectoRepository) {
         this.proyectoRepository = proyectoRepository;
+        this.itemProyectoRepository = itemProyectoRepository;
     }
 
-    // 🔹 LISTAR PROYECTOS
     @GetMapping("/proyectos")
     public String listarProyectos(Model model) {
         model.addAttribute("proyectos", proyectoRepository.findAll());
         return "proyectos/lista";
     }
 
-    // 🔹 FORMULARIO NUEVO PROYECTO
     @GetMapping("/proyectos/nuevo")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("proyecto", new Proyecto());
         return "proyectos/formulario";
     }
 
-    // 🔹 GUARDAR PROYECTO
     @PostMapping("/proyectos/guardar")
     public String guardarProyecto(@ModelAttribute Proyecto proyecto) {
+
+        if (proyecto.getPresupuestoTotal() == null) {
+            proyecto.setPresupuestoTotal(BigDecimal.ZERO);
+        }
+
         proyectoRepository.save(proyecto);
         return "redirect:/proyectos";
     }
 
     @GetMapping("/proyectos/{id}")
-    public String verProyecto(@PathVariable Integer id, Model model) {
+    public String verProyecto(@PathVariable Integer id,
+                              @RequestParam(defaultValue = "0") int page,
+                              Model model) {
+
+        Proyecto proyecto = proyectoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+
+        var itemsPage = itemProyectoRepository.findByProyectoIdAndActivoTrue(
+                id,
+                PageRequest.of(page, 10)
+        );
+
+        model.addAttribute("proyecto", proyecto);
+        model.addAttribute("items", itemsPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", itemsPage.getTotalPages());
+
+        return "proyectos/detalle";
+    }
+
+    @GetMapping("/proyectos/{id}/editar")
+    public String mostrarFormularioEditar(@PathVariable Integer id, Model model) {
 
         Proyecto proyecto = proyectoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
 
         model.addAttribute("proyecto", proyecto);
+        return "proyectos/formulario";
+    }
 
-        return "proyectos/detalle";
+    @PostMapping("/proyectos/{id}/cancelar")
+    public String cancelarProyecto(@PathVariable Integer id) {
+
+        Proyecto proyecto = proyectoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+
+        proyecto.setEstado("CANCELADO");
+        proyectoRepository.save(proyecto);
+
+        return "redirect:/proyectos/" + id;
     }
 }

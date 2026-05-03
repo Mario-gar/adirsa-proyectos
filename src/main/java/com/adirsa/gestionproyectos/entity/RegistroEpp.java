@@ -8,13 +8,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "registro_transporte_equipo")
+@Table(name = "registro_epp")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegistroTransporteEquipo {
+public class RegistroEpp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,20 +25,17 @@ public class RegistroTransporteEquipo {
     private Proyecto proyecto;
 
     @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false)
+    @JoinColumn(name = "item_id")
     private ItemProyecto item;
 
     @Column(nullable = false)
     private LocalDate fecha;
 
     @Column(length = 150)
-    private String proveedor;
+    private String vendedor;
 
     @Column(name = "numero_factura", length = 100)
     private String numeroFactura;
-
-    @Column(length = 100)
-    private String clasificacion;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
@@ -55,8 +52,9 @@ public class RegistroTransporteEquipo {
     @Column(precision = 14, scale = 2)
     private BigDecimal total = BigDecimal.ZERO;
 
-    @Column(nullable = false)
-    private Boolean activo = true;
+    @ManyToOne
+    @JoinColumn(name = "registrado_por")
+    private Usuario registradoPor;
 
     @Column(name = "creado_en")
     private LocalDateTime creadoEn;
@@ -64,10 +62,14 @@ public class RegistroTransporteEquipo {
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
 
+    @Column(nullable = false)
+    private Boolean activo = true;
+
     @PrePersist
     public void prePersist() {
         this.creadoEn = LocalDateTime.now();
         calcular();
+        if (activo == null) activo = true;
     }
 
     @PreUpdate
@@ -79,8 +81,8 @@ public class RegistroTransporteEquipo {
     public void calcular() {
         if (cantidad == null) cantidad = BigDecimal.ZERO;
         if (costoUnitario == null) costoUnitario = BigDecimal.ZERO;
-        if (activo == null) activo = true;
 
         total = cantidad.multiply(costoUnitario);
     }
+
 }

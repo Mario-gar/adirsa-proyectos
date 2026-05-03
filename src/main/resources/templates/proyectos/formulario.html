@@ -2,13 +2,16 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Nuevo Proyecto - ADIRSA</title>
+    <title>Proyecto - ADIRSA</title>
 </head>
 <body>
 
-<h1>Nuevo Proyecto</h1>
+<h1 th:text="${proyecto.id == null ? 'Nuevo Proyecto' : 'Editar Proyecto'}"></h1>
 
 <form th:action="@{/proyectos/guardar}" th:object="${proyecto}" method="post">
+
+    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{creadoEn}">
 
     <label>Código:</label><br>
     <input type="text" th:field="*{codigo}">
@@ -34,6 +37,10 @@
     <input type="date" th:field="*{fechaFinEstimada}">
     <br><br>
 
+    <label>Fecha fin real:</label><br>
+    <input type="date" th:field="*{fechaFinReal}">
+    <br><br>
+
     <label>Estado:</label><br>
     <select th:field="*{estado}">
         <option value="PLANIFICADO">Planificado</option>
@@ -48,7 +55,7 @@
     <input type="number" step="0.01" th:field="*{presupuestoTotal}">
     <br><br>
 
-    <button type="submit">Guardar proyecto</button>
+    <button type="submit">Guardar</button>
 
 </form>
 

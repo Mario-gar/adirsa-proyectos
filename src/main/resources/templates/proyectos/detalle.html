@@ -13,9 +13,101 @@
 <p><strong>Estado:</strong> <span th:text="${proyecto.estado}"></span></p>
 <p><strong>Presupuesto:</strong> <span th:text="${proyecto.presupuestoTotal}"></span></p>
 
+<a th:href="@{/proyectos/{id}/editar(id=${proyecto.id})}">
+    Editar proyecto
+</a>
+
+<form th:action="@{/proyectos/{id}/cancelar(id=${proyecto.id})}" method="post" style="display:inline;">
+    <button type="submit" th:if="${proyecto.estado != 'CANCELADO'}">
+        Cancelar proyecto
+    </button>
+</form>
+
+<hr>
+
+<h2>Ítems del Proyecto</h2>
+
+<a th:href="@{/proyectos/{id}/items/nuevo(id=${proyecto.id})}">
+    Agregar ítem
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th rowspan="2">Código</th>
+        <th rowspan="2">Descripción</th>
+        <th rowspan="2">U/M</th>
+        <th rowspan="2">Cantidad</th>
+        <th colspan="2">Materiales</th>
+        <th colspan="2">Mano de obra</th>
+        <th colspan="2">Transporte y equipo</th>
+        <th colspan="2">Gran total</th>
+    </tr>
+    <tr>
+        <th>Unit</th>
+        <th>Total</th>
+        <th>Unit</th>
+        <th>Total</th>
+        <th>Unit</th>
+        <th>Total</th>
+        <th>Unit</th>
+        <th>Total</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.codigo}"></td>
+
+        <td>
+            <a th:href="@{/items/{id}(id=${item.id})}"
+               th:text="${item.descripcion}">
+            </a>
+        </td>
+
+        <td th:text="${item.unidadMedida}"></td>
+        <td th:text="${item.cantidadPresupuestada}"></td>
+
+        <td th:text="${item.materialUnitario}"></td>
+        <td th:text="${item.materialTotal}"></td>
+
+        <td th:text="${item.manoObraUnitario}"></td>
+        <td th:text="${item.manoObraTotal}"></td>
+
+        <td th:text="${item.transporteEquipoUnitario}"></td>
+        <td th:text="${item.transporteEquipoTotal}"></td>
+
+        <td th:text="${item.precioUnitarioPresupuestado}"></td>
+        <td th:text="${item.totalPresupuestado}"></td>
+    </tr>
+    </tbody>
+</table>
+
 <br>
 
-<a href="/proyectos">Volver</a>
+<div>
+    <a th:if="${currentPage > 0}"
+       th:href="@{/proyectos/{id}(id=${proyecto.id}, page=${currentPage - 1})}">
+        Anterior
+    </a>
+
+    <span>Página [[${currentPage + 1}]] de [[${totalPages}]]</span>
+
+    <a th:if="${currentPage < totalPages - 1}"
+       th:href="@{/proyectos/{id}(id=${proyecto.id}, page=${currentPage + 1})}">
+        Siguiente
+    </a>
+</div>
+
+<p th:if="${#lists.isEmpty(items)}">
+    Este proyecto aún no tiene ítems registrados.
+</p>
+
+<br>
+
+<a href="/proyectos">Volver a proyectos</a>
 
 </body>
 </html>

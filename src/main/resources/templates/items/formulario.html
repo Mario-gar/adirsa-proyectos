@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ítem - ADIRSA</title>
+</head>
+<body>
+
+<h1 th:text="${item.id == null ? 'Nuevo Ítem' : 'Editar Ítem'}"></h1>
+
+<p>
+    Proyecto:
+    <strong th:text="${proyecto.nombre}"></strong>
+</p>
+
+<form th:action="@{/proyectos/{id}/items/guardar(id=${proyecto.id})}"
+      th:object="${item}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{creadoEn}">
+    <input type="hidden" th:field="*{activo}">
+
+    <label>Código:</label><br>
+    <input type="text" th:field="*{codigo}">
+    <br><br>
+
+    <label>Descripción:</label><br>
+    <textarea th:field="*{descripcion}" required></textarea>
+    <br><br>
+
+    <label>Unidad de medida:</label><br>
+    <input type="text" th:field="*{unidadMedida}">
+    <br><br>
+
+    <label>Cantidad presupuestada:</label><br>
+    <input type="number" step="0.01" th:field="*{cantidadPresupuestada}">
+    <br><br>
+
+    <hr>
+
+    <h3>Costos unitarios por categoría</h3>
+
+    <label>Material unitario:</label><br>
+    <input type="number" step="0.01" th:field="*{materialUnitario}">
+    <br><br>
+
+    <label>Mano de obra unitario:</label><br>
+    <input type="number" step="0.01" th:field="*{manoObraUnitario}">
+    <br><br>
+
+    <label>Transporte / equipo unitario:</label><br>
+    <input type="number" step="0.01" th:field="*{transporteEquipoUnitario}">
+    <br><br>
+
+    <button type="submit">Guardar ítem</button>
+
+</form>
+
+<br>
+
+<a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+    Volver al proyecto
+</a>
+
+</body>
+</html>

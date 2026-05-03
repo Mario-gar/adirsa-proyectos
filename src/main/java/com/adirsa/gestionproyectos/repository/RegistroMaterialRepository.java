@@ -10,4 +10,6 @@ public interface RegistroMaterialRepository extends JpaRepository<RegistroMateri
     List<RegistroMaterial> findByProyectoId(Integer proyectoId);
 
     List<RegistroMaterial> findByItemId(Integer itemId);
+
+    List<RegistroMaterial> findByItemIdAndActivoTrue(Integer itemId);
 }
