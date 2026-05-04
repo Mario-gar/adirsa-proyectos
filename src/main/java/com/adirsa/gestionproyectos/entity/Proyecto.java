@@ -60,6 +60,15 @@ public class Proyecto {
     @Column(name = "actualizado_en")
     private LocalDateTime actualizadoEn;
 
+    @Column(name = "presupuesto_costos_indirectos", precision = 14, scale = 2)
+    private BigDecimal presupuestoCostosIndirectos = BigDecimal.ZERO;
+
+    @Column(name = "presupuesto_administracion", precision = 14, scale = 2)
+    private BigDecimal presupuestoAdministracion = BigDecimal.ZERO;
+
+    @Column(name = "presupuesto_utilidad", precision = 14, scale = 2)
+    private BigDecimal presupuestoUtilidad = BigDecimal.ZERO;
+
     @PrePersist
     public void prePersist() {
         this.creadoEn = LocalDateTime.now();

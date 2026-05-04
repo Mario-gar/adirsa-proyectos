@@ -8,4 +8,8 @@ import java.util.List;
 public interface RegistroTransporteEquipoRepository extends JpaRepository<RegistroTransporteEquipo, Integer> {
 
     List<RegistroTransporteEquipo> findByItemIdAndActivoTrue(Integer itemId);
+
+    List<RegistroTransporteEquipo> findByProyectoId(Integer proyectoId);
+
+    List<RegistroTransporteEquipo> findByProyectoIdAndActivoTrue(Integer proyectoId);
 }

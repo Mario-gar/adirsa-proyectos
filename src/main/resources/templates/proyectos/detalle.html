@@ -11,7 +11,88 @@
 <p><strong>Código:</strong> <span th:text="${proyecto.codigo}"></span></p>
 <p><strong>Cliente:</strong> <span th:text="${proyecto.cliente}"></span></p>
 <p><strong>Estado:</strong> <span th:text="${proyecto.estado}"></span></p>
-<p><strong>Presupuesto:</strong> <span th:text="${proyecto.presupuestoTotal}"></span></p>
+<p><strong>Monto Contrato:</strong> <span th:text="${proyecto.presupuestoTotal}"></span></p>
+
+<hr>
+
+<h2>Resumen del Proyecto</h2>
+
+<table border="1" cellpadding="8">
+
+    <tr>
+        <th colspan="2">PRESUPUESTO</th>
+    </tr>
+
+    <tr>
+        <td>Directo (ítems)</td>
+        <td th:text="${presupuestoDirecto}"></td>
+    </tr>
+
+    <tr>
+        <td>Costos indirectos</td>
+        <td th:text="${proyecto.presupuestoCostosIndirectos}"></td>
+    </tr>
+
+    <tr>
+        <td>Administración</td>
+        <td th:text="${proyecto.presupuestoAdministracion}"></td>
+    </tr>
+
+    <tr>
+        <td>Utilidad</td>
+        <td th:text="${proyecto.presupuestoUtilidad}"></td>
+    </tr>
+
+    <tr>
+        <th>Total presupuesto</th>
+        <th th:text="${presupuestoTotal}"></th>
+    </tr>
+
+    <tr>
+        <th colspan="2">REAL</th>
+    </tr>
+
+    <tr>
+        <td>Materiales</td>
+        <td th:text="${materialRealProyecto}"></td>
+    </tr>
+
+    <tr>
+        <td>Mano de obra directa</td>
+        <td th:text="${manoObraDirectaProyecto}"></td>
+    </tr>
+
+    <tr>
+        <td>Mano de obra indirecta</td>
+        <td th:text="${manoObraIndirectaProyecto}"></td>
+    </tr>
+
+    <tr>
+        <td>Transporte / Equipo</td>
+        <td th:text="${transporteProyecto}"></td>
+    </tr>
+
+    <tr>
+        <td>EPP</td>
+        <td th:text="${eppProyecto}"></td>
+    </tr>
+
+    <tr>
+        <td>Subcontratos</td>
+        <td th:text="${subcontratosProyecto}"></td>
+    </tr>
+
+    <tr>
+        <th>Total real</th>
+        <th th:text="${totalRealProyecto}"></th>
+    </tr>
+
+    <tr>
+        <th>Diferencia</th>
+        <th th:text="${diferenciaProyecto}"></th>
+    </tr>
+
+</table>
 
 <a th:href="@{/proyectos/{id}/editar(id=${proyecto.id})}">
     Editar proyecto

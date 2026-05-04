@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="topbar" th:fragment="header(titulo)">
+
+    <div style="display:flex; align-items:center; gap:15px;">
+        <button style="border:none; background:none; font-size:20px;">
+            ☰
+        </button>
+
+        <h5 class="mb-0" th:text="${titulo}">Título</h5>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:15px;">
+
+        <span style="color:#6b7280;">Administrador</span>
+
+        <div style="
+            width:35px;
+            height:35px;
+            background:#dbeafe;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:bold;
+        ">
+            A
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="sidebar" th:fragment="sidebar">
+
+    <div class="sidebar-logo">
+        <img th:src="@{/img/logo-adirsa.png}" alt="ADIRSA Logo" class="sidebar-logo-img">
+        <div>
+            <strong>ADIRSA</strong>
+            <small>GESTIÓN DE PROYECTOS</small>
+        </div>
+    </div>
+
+    <div class="sidebar-menu">
+
+        <div class="sidebar-section">Menu principal</div>
+
+        <a th:href="@{/}" th:classappend="${activeMenu == 'dashboard'} ? 'active'">🏠 Dashboard</a>
+        <a th:href="@{/proyectos}" th:classappend="${activeMenu == 'proyectos'} ? 'active'">📁 Proyectos</a>
+        <a href="#">📄 Presupuestos</a>
+        <a href="#">📋 Ítems</a>
+
+        <div class="sidebar-section">Ejecución</div>
+
+        <a href="#">🧱 Materiales</a>
+        <a href="#">👷 Mano de Obra</a>
+        <a href="#">🚛 Transporte / Equipo</a>
+        <a href="#">🦺 EPP</a>
+        <a href="#">🤝 Subcontratos</a>
+        <a href="#">📊 Costos Indirectos</a>
+
+        <div class="sidebar-section">Configuración</div>
+
+        <a href="#">👤 Usuarios</a>
+        <a href="#">🔐 Roles</a>
+
+    </div>
+
+    <div class="sidebar-user">
+        <strong>Administrador</strong><br>
+        <small style="color:#9be7a5;">● En línea</small>
+    </div>
+
+</div>
+
+</body>
+</html>
