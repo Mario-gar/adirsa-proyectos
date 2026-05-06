@@ -3,50 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <title>Proyectos - ADIRSA</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
+
 <body>
 
-<h1>Proyectos</h1>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-<a href="/">Volver al inicio</a>
-<br><br>
+<div class="main-content">
 
-<a href="/proyectos/nuevo">Crear nuevo proyecto</a>
-<br><br>
+    <div th:replace="~{fragments/header :: header('Proyectos')}"></div>
 
-<table border="1" cellpadding="8">
-    <thead>
-    <tr>
-        <th>Código</th>
-        <th>Nombre</th>
-        <th>Cliente</th>
-        <th>Estado</th>
-        <th>Presupuesto</th>
-    </tr>
-    </thead>
+    <main class="content">
 
-    <tbody>
-    <tr th:each="proyecto : ${proyectos}">
+        <section class="page-head">
+            <div>
+                <p class="page-kicker">Panel principal</p>
+                <h2 class="page-title">Gestión de Proyectos</h2>
+                <p class="page-description">
+                    Control ejecutivo de proyectos, presupuestos, ejecución y alertas operativas.
+                </p>
+            </div>
 
-        <td th:text="${proyecto.codigo}"></td>
-
-        <td>
-            <a th:href="@{/proyectos/{id}(id=${proyecto.id})}"
-               th:text="${proyecto.nombre}">
+            <a th:href="@{/proyectos/nuevo}" class="btn-adirsa">
+                + Crear proyecto
             </a>
-        </td>
+        </section>
 
-        <td th:text="${proyecto.cliente}"></td>
-        <td th:text="${proyecto.estado}"></td>
-        <td th:text="${proyecto.presupuestoTotal}"></td>
+        <section class="project-summary-grid">
 
-    </tr>
-    </tbody>
-</table>
+            <article class="summary-card">
+                <div class="summary-card-header">
+                    <span class="summary-label">Total proyectos</span>
+                    <div class="summary-icon">📁</div>
+                </div>
+                <div class="summary-value" th:text="${#lists.size(proyectos)}">0</div>
+                <div class="summary-note">Registrados en el sistema</div>
+            </article>
 
-<p th:if="${#lists.isEmpty(proyectos)}">
-    No hay proyectos registrados.
-</p>
+            <article class="summary-card green">
+                <div class="summary-card-header">
+                    <span class="summary-label">En ejecución</span>
+                    <div class="summary-icon">🏗️</div>
+                </div>
+                <div class="summary-value">3</div>
+                <div class="summary-note">Proyectos activos</div>
+            </article>
+
+            <article class="summary-card orange">
+                <div class="summary-card-header">
+                    <span class="summary-label">Alertas</span>
+                    <div class="summary-icon">⚠️</div>
+                </div>
+                <div class="summary-value">5</div>
+                <div class="summary-note">Requieren revisión</div>
+            </article>
+
+            <article class="summary-card red">
+                <div class="summary-card-header">
+                    <span class="summary-label">Excedidos</span>
+                    <div class="summary-icon">📈</div>
+                </div>
+                <div class="summary-value">1</div>
+                <div class="summary-note">Sobre presupuesto</div>
+            </article>
+
+        </section>
+
+        <section class="alert-strip">
+            <div class="alert-pill red">⚠ Proyecto excedido</div>
+            <div class="alert-pill">⚠ Ítem excedido</div>
+            <div class="alert-pill">⚠ Mano de obra elevada</div>
+            <div class="alert-pill gray">⚠ Facturas sin clasificar</div>
+            <div class="alert-pill green">✓ Proyectos en control</div>
+        </section>
+
+        <section class="dashboard-card">
+
+            <div class="card-toolbar">
+                <div>
+                    <h2>Listado de proyectos</h2>
+                    <p>Resumen financiero y estado general de cada proyecto.</p>
+                </div>
+
+                <a th:href="@{/proyectos/nuevo}" class="btn-light-adirsa">
+                    Nuevo
+                </a>
+            </div>
+
+            <div class="table-wrap" th:if="${!#lists.isEmpty(proyectos)}">
+                <table class="adirsa-table">
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Proyecto</th>
+                        <th>Cliente</th>
+                        <th>Estado</th>
+                        <th>Presupuesto</th>
+                        <th>Riesgo</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="proyecto : ${proyectos}">
+
+                        <td>
+                            <span class="code-badge" th:text="${proyecto.codigo}">001</span>
+                        </td>
+
+                        <td>
+                            <a class="project-name"
+                               th:href="@{/proyectos/{id}(id=${proyecto.id})}"
+                               th:text="${proyecto.nombre}">
+                                Proyecto
+                            </a>
+                        </td>
+
+                        <td>
+                            <span class="client-text" th:text="${proyecto.cliente}">Cliente</span>
+                        </td>
+
+                        <td>
+                            <span class="status" th:text="${proyecto.estado}">
+                                EN_EJECUCION
+                            </span>
+                        </td>
+
+                        <td class="money"
+                            th:text="${#numbers.formatDecimal(proyecto.presupuestoTotal, 1, 'COMMA', 2, 'POINT')}">
+                            0.00
+                        </td>
+
+                        <td>
+                            <span class="risk ok">Controlado</span>
+                        </td>
+
+                        <td>
+                            <a class="btn-light-adirsa"
+                               th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+                                Ver
+                            </a>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(proyectos)}">
+                <h3>No hay proyectos registrados</h3>
+                <p>Crea el primer proyecto para comenzar a controlar presupuesto, costos y ejecución.</p>
+                <a th:href="@{/proyectos/nuevo}" class="btn-adirsa">
+                    Crear proyecto
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
 
 </body>
 </html>

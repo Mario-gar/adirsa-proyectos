@@ -2,47 +2,83 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="sidebar" th:fragment="sidebar">
+<aside class="sidebar" th:fragment="sidebar">
 
-    <div class="sidebar-logo">
-        <img th:src="@{/img/logo-adirsa.png}" alt="ADIRSA Logo" class="sidebar-logo-img">
+    <div class="sidebar-brand">
+        <img th:src="@{/img/adirsa-logo-blanco.png}" alt="ADIRSA Logo" class="sidebar-logo-img">
         <div>
             <strong>ADIRSA</strong>
-            <small>GESTIÓN DE PROYECTOS</small>
+            <span>GESTIÓN DE PROYECTOS</span>
         </div>
     </div>
 
-    <div class="sidebar-menu">
+    <nav class="sidebar-menu">
 
-        <div class="sidebar-section">Menu principal</div>
+        <a th:href="@{/dashboard}"
+           class="sidebar-main-link"
+           th:classappend="${activeMenu == 'dashboard'} ? ' active'">
+            <span class="sidebar-main-icon">📊</span>
+            <span>Dashboard</span>
+        </a>
 
-        <a th:href="@{/}" th:classappend="${activeMenu == 'dashboard'} ? 'active'">🏠 Dashboard</a>
-        <a th:href="@{/proyectos}" th:classappend="${activeMenu == 'proyectos'} ? 'active'">📁 Proyectos</a>
-        <a href="#">📄 Presupuestos</a>
-        <a href="#">📋 Ítems</a>
+        <a th:href="@{/proyectos}"
+           class="sidebar-main-link"
+           th:classappend="${activeMenu == 'proyectos'} ? ' active'">
+            <span class="sidebar-main-icon">📁</span>
+            <span>Proyectos</span>
+        </a>
 
-        <div class="sidebar-section">Ejecución</div>
+        <a th:href="@{/movimientos-pendientes}"
+           class="sidebar-main-link"
+           th:classappend="${activeMenu == 'movimientos'} ? ' active'">
+            <span class="sidebar-main-icon">🧾</span>
+            <span>Facturas / Movimientos</span>
+        </a>
 
-        <a href="#">🧱 Materiales</a>
-        <a href="#">👷 Mano de Obra</a>
-        <a href="#">🚛 Transporte / Equipo</a>
-        <a href="#">🦺 EPP</a>
-        <a href="#">🤝 Subcontratos</a>
-        <a href="#">📊 Costos Indirectos</a>
+        <details class="sidebar-group">
+            <summary class="sidebar-group-title">
+                <span><span class="sidebar-main-icon">👷</span> Mano de Obra</span>
+            </summary>
 
-        <div class="sidebar-section">Configuración</div>
+            <div class="sidebar-submenu">
+                <a th:href="@{/mano-obra}" class="sidebar-sub-link">Registros</a>
+                <a href="#" class="sidebar-sub-link">Planillas</a>
+                <a href="#" class="sidebar-sub-link">Reportes</a>
+            </div>
+        </details>
 
-        <a href="#">👤 Usuarios</a>
-        <a href="#">🔐 Roles</a>
+        <details class="sidebar-group">
+            <summary class="sidebar-group-title">
+                <span><span class="sidebar-main-icon">📈</span> Reportes</span>
+            </summary>
 
-    </div>
+            <div class="sidebar-submenu">
+                <a href="#" class="sidebar-sub-link">Por proyecto</a>
+                <a href="#" class="sidebar-sub-link">Por ítem</a>
+                <a href="#" class="sidebar-sub-link">Presupuesto vs Real</a>
+            </div>
+        </details>
+
+        <details class="sidebar-group">
+            <summary class="sidebar-group-title">
+                <span><span class="sidebar-main-icon">⚙</span> Administración</span>
+            </summary>
+
+            <div class="sidebar-submenu">
+                <a th:href="@{/usuarios}" class="sidebar-sub-link">Usuarios</a>
+                <a href="#" class="sidebar-sub-link">Roles</a>
+                <a href="#" class="sidebar-sub-link">Configuración</a>
+            </div>
+        </details>
+
+    </nav>
 
     <div class="sidebar-user">
-        <strong>Administrador</strong><br>
-        <small style="color:#9be7a5;">● En línea</small>
+        <strong>Administrador</strong>
+        <span>● En línea</span>
     </div>
 
-</div>
+</aside>
 
 </body>
 </html>

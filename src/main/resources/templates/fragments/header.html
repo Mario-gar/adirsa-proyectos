@@ -2,36 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="topbar" th:fragment="header(titulo)">
+<header class="topbar" th:fragment="header(titulo)">
 
-    <div style="display:flex; align-items:center; gap:15px;">
-        <button style="border:none; background:none; font-size:20px;">
+    <div class="topbar-left">
+        <button class="menu-button" type="button">
             ☰
         </button>
 
-        <h5 class="mb-0" th:text="${titulo}">Título</h5>
+        <h1 class="topbar-title" th:text="${titulo}">
+            Proyectos
+        </h1>
     </div>
 
-    <div style="display:flex; align-items:center; gap:15px;">
-
-        <span style="color:#6b7280;">Administrador</span>
-
-        <div style="
-            width:35px;
-            height:35px;
-            background:#dbeafe;
-            border-radius:50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-weight:bold;
-        ">
-            A
-        </div>
-
+    <div class="topbar-user">
+        <span>Administrador</span>
+        <div class="avatar">A</div>
     </div>
 
-</div>
+</header>
 
 </body>
 </html>
