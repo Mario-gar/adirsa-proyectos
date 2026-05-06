@@ -3,304 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <title>Detalle Proyecto</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 
-<h1 th:text="${proyecto.nombre}"></h1>
+<div th:replace="fragments/sidebar :: sidebar"></div>
 
-<p><strong>Código:</strong> <span th:text="${proyecto.codigo}"></span></p>
-<p><strong>Cliente:</strong> <span th:text="${proyecto.cliente}"></span></p>
-<p><strong>Estado:</strong> <span th:text="${proyecto.estado}"></span></p>
-<p><strong>Monto Contrato:</strong> <span th:text="${proyecto.presupuestoTotal}"></span></p>
+<div class="main-content">
 
-<hr>
+    <div th:replace="fragments/header :: header('Detalle del Proyecto')"></div>
 
-<h2>Resumen del Proyecto</h2>
+    <div class="content">
 
-<table border="1" cellpadding="8">
+        <div class="card-custom">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h3 th:text="${proyecto.nombre}"></h3>
+                    <p class="text-muted mb-1">
+                        Código: <span th:text="${proyecto.codigo}"></span> |
+                        Cliente: <span th:text="${proyecto.cliente}"></span>
+                    </p>
+                    <span class="badge bg-primary" th:text="${proyecto.estado}"></span>
+                </div>
 
-    <tr>
-        <th colspan="2">PRESUPUESTO</th>
-    </tr>
+                <div>
+                    <a th:href="@{/proyectos/{id}/editar(id=${proyecto.id})}" class="btn btn-outline-secondary btn-sm">
+                        Editar proyecto
+                    </a>
 
-    <tr>
-        <td>Directo (ítems)</td>
-        <td th:text="${presupuestoDirecto}"></td>
-    </tr>
+                    <form th:action="@{/proyectos/{id}/cancelar(id=${proyecto.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                th:if="${proyecto.estado != 'CANCELADO'}">
+                            Cancelar
+                        </button>
+                    </form>
 
-    <tr>
-        <td>Costos indirectos</td>
-        <td th:text="${proyecto.presupuestoCostosIndirectos}"></td>
-    </tr>
+                    <a href="/proyectos" class="btn btn-outline-primary btn-sm">
+                        Volver
+                    </a>
+                </div>
+            </div>
+        </div>
 
-    <tr>
-        <td>Administración</td>
-        <td th:text="${proyecto.presupuestoAdministracion}"></td>
-    </tr>
+        <div class="row">
 
-    <tr>
-        <td>Utilidad</td>
-        <td th:text="${proyecto.presupuestoUtilidad}"></td>
-    </tr>
+            <div class="col-lg-8">
 
-    <tr>
-        <th>Total presupuesto</th>
-        <th th:text="${presupuestoTotal}"></th>
-    </tr>
+                <div class="card-custom">
+                    <h5 class="section-title">Resumen del Proyecto</h5>
 
-    <tr>
-        <th colspan="2">REAL</th>
-    </tr>
+                    <div class="table-responsive-custom">
+                        <table class="table table-bordered table-sm">
+                            <tr>
+                                <th colspan="2">PRESUPUESTO</th>
+                            </tr>
 
-    <tr>
-        <td>Materiales</td>
-        <td th:text="${materialRealProyecto}"></td>
-    </tr>
+                            <tr>
+                                <td>Directo por ítems</td>
+                                <td th:text="${presupuestoDirecto}"></td>
+                            </tr>
 
-    <tr>
-        <td>Mano de obra directa</td>
-        <td th:text="${manoObraDirectaProyecto}"></td>
-    </tr>
+                            <tr>
+                                <td>Costos indirectos presupuestados</td>
+                                <td th:text="${proyecto.presupuestoCostosIndirectos}"></td>
+                            </tr>
 
-    <tr>
-        <td>Mano de obra indirecta</td>
-        <td th:text="${manoObraIndirectaProyecto}"></td>
-    </tr>
+                            <tr>
+                                <td>Administración presupuestada</td>
+                                <td th:text="${proyecto.presupuestoAdministracion}"></td>
+                            </tr>
 
-    <tr>
-        <td>Transporte / Equipo</td>
-        <td th:text="${transporteProyecto}"></td>
-    </tr>
+                            <tr>
+                                <td>Utilidad esperada</td>
+                                <td th:text="${proyecto.presupuestoUtilidad}"></td>
+                            </tr>
 
-    <tr>
-        <td>EPP</td>
-        <td th:text="${eppProyecto}"></td>
-    </tr>
+                            <tr class="table-primary fw-bold">
+                                <td>Total presupuesto</td>
+                                <td th:text="${presupuestoTotal}"></td>
+                            </tr>
 
-    <tr>
-        <td>Subcontratos</td>
-        <td th:text="${subcontratosProyecto}"></td>
-    </tr>
+                            <tr>
+                                <th colspan="2">REAL</th>
+                            </tr>
 
-    <tr>
-        <th>Total real</th>
-        <th th:text="${totalRealProyecto}"></th>
-    </tr>
+                            <tr>
+                                <td>Materiales</td>
+                                <td th:text="${materialRealProyecto}"></td>
+                            </tr>
 
-    <tr>
-        <th>Diferencia</th>
-        <th th:text="${diferenciaProyecto}"></th>
-    </tr>
+                            <tr>
+                                <td>Mano de obra directa</td>
+                                <td th:text="${manoObraDirectaProyecto}"></td>
+                            </tr>
 
-</table>
+                            <tr>
+                                <td>Mano de obra indirecta</td>
+                                <td th:text="${manoObraIndirectaProyecto}"></td>
+                            </tr>
 
-<a th:href="@{/proyectos/{id}/editar(id=${proyecto.id})}">
-    Editar proyecto
-</a>
+                            <tr>
+                                <td>Transporte / Equipo</td>
+                                <td th:text="${transporteProyecto}"></td>
+                            </tr>
 
-<form th:action="@{/proyectos/{id}/cancelar(id=${proyecto.id})}" method="post" style="display:inline;">
-    <button type="submit" th:if="${proyecto.estado != 'CANCELADO'}">
-        Cancelar proyecto
-    </button>
-</form>
+                            <tr>
+                                <td>EPP</td>
+                                <td th:text="${eppProyecto}"></td>
+                            </tr>
 
-<hr>
+                            <tr>
+                                <td>Subcontratos</td>
+                                <td th:text="${subcontratosProyecto}"></td>
+                            </tr>
 
-<h2>Ítems del Proyecto</h2>
+                            <tr>
+                                <td>Costos indirectos reales</td>
+                                <td th:text="${costosIndirectosProyecto}"></td>
+                            </tr>
 
-<a th:href="@{/proyectos/{id}/items/nuevo(id=${proyecto.id})}">
-    Agregar ítem
-</a>
+                            <tr class="table-warning fw-bold">
+                                <td>Total real</td>
+                                <td th:text="${totalRealProyecto}"></td>
+                            </tr>
 
-<br><br>
+                            <tr class="fw-bold">
+                                <td>Diferencia</td>
+                                <td th:text="${diferenciaProyecto}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
 
-<table border="1" cellpadding="8">
-    <thead>
-    <tr>
-        <th rowspan="2">Código</th>
-        <th rowspan="2">Descripción</th>
-        <th rowspan="2">U/M</th>
-        <th rowspan="2">Cantidad</th>
-        <th colspan="2">Materiales</th>
-        <th colspan="2">Mano de obra</th>
-        <th colspan="2">Transporte y equipo</th>
-        <th colspan="2">Gran total</th>
-    </tr>
-    <tr>
-        <th>Unit</th>
-        <th>Total</th>
-        <th>Unit</th>
-        <th>Total</th>
-        <th>Unit</th>
-        <th>Total</th>
-        <th>Unit</th>
-        <th>Total</th>
-    </tr>
-    </thead>
+                <div class="card-custom">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="section-title mb-0">Ítems del Proyecto</h5>
+                        <a th:href="@{/proyectos/{id}/items/nuevo(id=${proyecto.id})}" class="btn btn-primary-custom btn-sm">
+                            + Agregar ítem
+                        </a>
+                    </div>
 
-    <tbody>
-    <tr th:each="item : ${items}">
-        <td th:text="${item.codigo}"></td>
+                    <div class="table-responsive-custom">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                            <tr>
+                                <th rowspan="2">Código</th>
+                                <th rowspan="2">Descripción</th>
+                                <th rowspan="2">U/M</th>
+                                <th rowspan="2">Cantidad</th>
+                                <th colspan="2">Materiales</th>
+                                <th colspan="2">Mano de obra</th>
+                                <th colspan="2">Transporte / Equipo</th>
+                                <th colspan="2">Gran total</th>
+                            </tr>
+                            <tr>
+                                <th>Unit</th>
+                                <th>Total</th>
+                                <th>Unit</th>
+                                <th>Total</th>
+                                <th>Unit</th>
+                                <th>Total</th>
+                                <th>Unit</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
 
-        <td>
-            <a th:href="@{/items/{id}(id=${item.id})}"
-               th:text="${item.descripcion}">
-            </a>
-        </td>
+                            <tbody>
+                            <tr th:each="item : ${items}">
+                                <td th:text="${item.codigo}"></td>
+                                <td class="descripcion-cell">
+                                    <a th:href="@{/items/{id}(id=${item.id})}" th:text="${item.descripcion}"></a>
+                                </td>
+                                <td th:text="${item.unidadMedida}"></td>
+                                <td th:text="${item.cantidadPresupuestada}"></td>
 
-        <td th:text="${item.unidadMedida}"></td>
-        <td th:text="${item.cantidadPresupuestada}"></td>
+                                <td th:text="${item.materialUnitario}"></td>
+                                <td th:text="${item.materialTotal}"></td>
 
-        <td th:text="${item.materialUnitario}"></td>
-        <td th:text="${item.materialTotal}"></td>
+                                <td th:text="${item.manoObraUnitario}"></td>
+                                <td th:text="${item.manoObraTotal}"></td>
 
-        <td th:text="${item.manoObraUnitario}"></td>
-        <td th:text="${item.manoObraTotal}"></td>
+                                <td th:text="${item.transporteEquipoUnitario}"></td>
+                                <td th:text="${item.transporteEquipoTotal}"></td>
 
-        <td th:text="${item.transporteEquipoUnitario}"></td>
-        <td th:text="${item.transporteEquipoTotal}"></td>
+                                <td th:text="${item.precioUnitarioPresupuestado}"></td>
+                                <td th:text="${item.totalPresupuestado}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-        <td th:text="${item.precioUnitarioPresupuestado}"></td>
-        <td th:text="${item.totalPresupuestado}"></td>
-    </tr>
-    </tbody>
-</table>
+                    <p th:if="${#lists.isEmpty(items)}" class="text-muted">
+                        Este proyecto aún no tiene ítems registrados.
+                    </p>
 
-<br>
+                    <div class="mt-3">
+                        <a th:if="${currentPage > 0}"
+                           th:href="@{/proyectos/{id}(id=${proyecto.id}, page=${currentPage - 1})}"
+                           class="btn btn-outline-secondary btn-sm">
+                            Anterior
+                        </a>
 
-<h2>Mano de obra indirecta</h2>
+                        <span class="mx-2">Página [[${currentPage + 1}]] de [[${totalPages}]]</span>
 
-<a th:href="@{/proyectos/{id}/mano-obra-indirecta/nuevo(id=${proyecto.id})}">
-    + Registrar Mano de Obra Indirecta
-</a>
+                        <a th:if="${currentPage < totalPages - 1}"
+                           th:href="@{/proyectos/{id}(id=${proyecto.id}, page=${currentPage + 1})}"
+                           class="btn btn-outline-secondary btn-sm">
+                            Siguiente
+                        </a>
+                    </div>
+                </div>
 
-<br><br>
+                <div class="card-custom">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="section-title mb-0">Movimientos Pendientes</h5>
 
-<table border="1" cellpadding="8">
-    <thead>
-    <tr>
-        <th>Fecha</th>
-        <th>Periodo</th>
-        <th># Planilla</th>
-        <th>Empleado</th>
-        <th>Cargo</th>
-        <th>Días</th>
-        <th>Pago/Día</th>
-        <th>Salario Básico</th>
-        <th>Incentivos</th>
-        <th>Viáticos</th>
-        <th>Salario Bruto</th>
-        <th>Préstamos</th>
-        <th>Salario Neto</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
+                        <div>
+                            <a th:href="@{/proyectos/{id}/movimientos-pendientes/nuevo(id=${proyecto.id})}"
+                               class="btn btn-primary-custom btn-sm">
+                                + Registrar manual
+                            </a>
 
-    <tbody>
-    <tr th:each="mo : ${manoObraIndirecta}">
-        <td th:text="${mo.fecha}"></td>
-        <td th:text="${mo.periodo}"></td>
-        <td th:text="${mo.numeroPlanilla}"></td>
-        <td th:text="${mo.empleado}"></td>
-        <td th:text="${mo.cargo}"></td>
-        <td th:text="${mo.diasTrabajados}"></td>
-        <td th:text="${mo.pagoPorDia}"></td>
-        <td th:text="${mo.salarioBasico}"></td>
-        <td th:text="${mo.incentivos}"></td>
-        <td th:text="${mo.viaticos}"></td>
-        <td th:text="${mo.salarioBruto}"></td>
-        <td th:text="${mo.prestamos}"></td>
-        <td th:text="${mo.salarioNeto}"></td>
-        <td>
-            <a th:href="@{/mano-obra/{id}/editar(id=${mo.id})}">Editar</a>
+                            <a th:href="@{/proyectos/{id}/movimientos-pendientes/importar(id=${proyecto.id})}"
+                               class="btn btn-success btn-sm">
+                                Importar Excel
+                            </a>
 
-            <form th:action="@{/mano-obra/{id}/desactivar(id=${mo.id})}"
-                  method="post"
-                  style="display:inline;">
-                <button type="submit">Eliminar</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                            <a th:href="@{/proyectos/{id}/movimientos-pendientes(id=${proyecto.id})}"
+                               class="btn btn-outline-secondary btn-sm">
+                                Ver todos
+                            </a>
+                        </div>
+                    </div>
 
-<p th:if="${#lists.isEmpty(manoObraIndirecta)}">
-    No hay registros de mano de obra indirecta.
-</p>
+                    <div class="table-responsive-custom">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Factura</th>
+                                <th>Proveedor</th>
+                                <th>Descripción</th>
+                                <th>U.M</th>
+                                <th>Cantidad</th>
+                                <th>C. Unit</th>
+                                <th>Subtotal</th>
+                                <th>IVA</th>
+                                <th>Total sin IVA</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
 
-<hr>
+                            <tbody>
+                            <tr th:each="m : ${movimientosPendientes}">
+                                <td th:text="${m.fecha}"></td>
+                                <td th:text="${m.numeroFactura}"></td>
+                                <td th:text="${m.proveedor}"></td>
+                                <td class="descripcion-cell" th:text="${m.descripcion}"></td>
+                                <td th:text="${m.unidadMedida}"></td>
+                                <td th:text="${m.cantidad}"></td>
+                                <td th:text="${m.costoUnitario}"></td>
+                                <td th:text="${m.subtotal}"></td>
+                                <td th:text="${m.iva}"></td>
+                                <td th:text="${m.total}"></td>
+                                <td th:text="${m.estado}"></td>
 
-<h2>EPP Global del Proyecto</h2>
+                                <td class="actions-cell">
+                                    <a th:href="@{/movimientos-pendientes/{id}/clasificar(id=${m.id})}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Clasificar
+                                    </a>
 
-<a th:href="@{/proyectos/{id}/epp/nuevo(id=${proyecto.id})}">
-    + Registrar EPP Global
-</a>
+                                    <form th:action="@{/movimientos-pendientes/{id}/anular(id=${m.id})}"
+                                          method="post"
+                                          style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            Anular
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-<br><br>
+                    <p th:if="${#lists.isEmpty(movimientosPendientes)}" class="text-muted">
+                        No hay movimientos pendientes.
+                    </p>
+                </div>
 
-<table border="1" cellpadding="8">
-    <thead>
-    <tr>
-        <th>Fecha</th>
-        <th>Vendedor</th>
-        <th># Factura</th>
-        <th>Descripción</th>
-        <th>U.M</th>
-        <th>Cantidad</th>
-        <th>C.Unit</th>
-        <th>Total</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
+                <div class="card-custom">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="section-title mb-0">Mano de Obra Indirecta</h5>
 
-    <tbody>
-    <tr th:each="e : ${eppGlobal}">
-        <td th:text="${e.fecha}"></td>
-        <td th:text="${e.vendedor}"></td>
-        <td th:text="${e.numeroFactura}"></td>
-        <td th:text="${e.descripcion}"></td>
-        <td th:text="${e.unidadMedida}"></td>
-        <td th:text="${e.cantidad}"></td>
-        <td th:text="${e.costoUnitario}"></td>
-        <td th:text="${e.total}"></td>
-        <td>
-            <a th:href="@{/epp/{id}/editar(id=${e.id})}">Editar</a>
+                        <a th:href="@{/proyectos/{id}/mano-obra-indirecta/nuevo(id=${proyecto.id})}"
+                           class="btn btn-primary btn-sm">
+                            + Registrar Mano de Obra
+                        </a>
+                    </div>
 
-            <form th:action="@{/epp/{id}/desactivar(id=${e.id})}"
-                  method="post"
-                  style="display:inline;">
-                <button type="submit">Eliminar</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                    <div class="table-responsive-custom">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Periodo</th>
+                                <th># Planilla</th>
+                                <th>Empleado</th>
+                                <th>Cargo</th>
+                                <th>Días</th>
+                                <th>Pago/Día</th>
+                                <th>Salario Neto</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
 
-<p th:if="${#lists.isEmpty(eppGlobal)}">
-    No hay EPP global registrado.
-</p>
+                            <tbody>
+                            <tr th:each="mo : ${manoObraIndirecta}">
+                                <td th:text="${mo.fecha}"></td>
+                                <td th:text="${mo.periodo}"></td>
+                                <td th:text="${mo.numeroPlanilla}"></td>
 
-<div>
-    <a th:if="${currentPage > 0}"
-       th:href="@{/proyectos/{id}(id=${proyecto.id}, page=${currentPage - 1})}">
-        Anterior
-    </a>
+                                <td class="descripcion-cell" th:text="${mo.empleado}"></td>
 
-    <span>Página [[${currentPage + 1}]] de [[${totalPages}]]</span>
+                                <td th:text="${mo.cargo}"></td>
+                                <td th:text="${mo.diasTrabajados}"></td>
+                                <td th:text="${mo.pagoPorDia}"></td>
+                                <td th:text="${mo.salarioNeto}"></td>
 
-    <a th:if="${currentPage < totalPages - 1}"
-       th:href="@{/proyectos/{id}(id=${proyecto.id}, page=${currentPage + 1})}">
-        Siguiente
-    </a>
+                                <td class="actions-cell">
+                                    <a th:href="@{/mano-obra/{id}/editar(id=${mo.id})}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Editar
+                                    </a>
+
+                                    <form th:action="@{/mano-obra/{id}/desactivar(id=${mo.id})}"
+                                          method="post"
+                                          style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p th:if="${#lists.isEmpty(manoObraIndirecta)}" class="text-muted">
+                        No hay mano de obra indirecta registrada.
+                    </p>
+                </div>
+
+                <div class="card-custom">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="section-title mb-0">EPP Global del Proyecto</h5>
+
+                        <a th:href="@{/proyectos/{id}/epp/nuevo(id=${proyecto.id})}"
+                           class="btn btn-primary-custom btn-sm">
+                            + Registrar EPP
+                        </a>
+                    </div>
+
+                    <div class="table-responsive-custom">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Vendedor</th>
+                                <th># Factura</th>
+                                <th>Descripción</th>
+                                <th>U.M</th>
+                                <th>Cantidad</th>
+                                <th>C. Unit</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="e : ${eppGlobal}">
+                                <td th:text="${e.fecha}"></td>
+                                <td th:text="${e.vendedor}"></td>
+                                <td th:text="${e.numeroFactura}"></td>
+
+                                <td class="descripcion-cell" th:text="${e.descripcion}"></td>
+
+                                <td th:text="${e.unidadMedida}"></td>
+                                <td th:text="${e.cantidad}"></td>
+                                <td th:text="${e.costoUnitario}"></td>
+                                <td th:text="${e.total}"></td>
+
+                                <td class="actions-cell">
+                                    <a th:href="@{/epp/{id}/editar(id=${e.id})}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Editar
+                                    </a>
+
+                                    <form th:action="@{/epp/{id}/desactivar(id=${e.id})}"
+                                          method="post"
+                                          style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p th:if="${#lists.isEmpty(eppGlobal)}" class="text-muted">
+                        No hay EPP global registrado.
+                    </p>
+                </div>
+
+                <div class="card-custom">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="section-title mb-0">Costos Indirectos Reales</h5>
+                        <a th:href="@{/proyectos/{id}/costos-indirectos/nuevo(id=${proyecto.id})}"
+                           class="btn btn-primary-custom btn-sm">
+                            + Registrar costo indirecto
+                        </a>
+                    </div>
+
+                    <div class="table-responsive-custom">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Categoría</th>
+                                <th>Proveedor</th>
+                                <th># Factura</th>
+                                <th>Descripción</th>
+                                <th>U.M</th>
+                                <th>Cantidad</th>
+                                <th>C. Unit</th>
+                                <th>Subtotal</th>
+                                <th>IVA</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="c : ${costosIndirectos}">
+                                <td th:text="${c.fecha}"></td>
+                                <td th:text="${c.categoria}"></td>
+                                <td th:text="${c.proveedor}"></td>
+                                <td th:text="${c.numeroFactura}"></td>
+                                <td class="descripcion-cell" th:text="${c.descripcion}"></td>
+                                <td th:text="${c.unidadMedida}"></td>
+                                <td th:text="${c.cantidad}"></td>
+                                <td th:text="${c.costoUnitario}"></td>
+                                <td th:text="${c.subtotal}"></td>
+                                <td th:text="${c.iva}"></td>
+                                <td th:text="${c.total}"></td>
+                                <td class="actions-cell">
+                                    <a th:href="@{/costos-indirectos/{id}/editar(id=${c.id})}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Editar
+                                    </a>
+
+                                    <form th:action="@{/costos-indirectos/{id}/desactivar(id=${c.id})}"
+                                          method="post"
+                                          style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p th:if="${#lists.isEmpty(costosIndirectos)}" class="text-muted">
+                        No hay costos indirectos registrados.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="card-custom sticky-top" style="top:90px;">
+                    <h5 class="section-title">Panel Financiero</h5>
+
+                    <div class="summary-box mb-3">
+                        <small class="text-muted">Presupuesto total</small>
+                        <h4 class="text-money" th:text="${presupuestoTotal}"></h4>
+                    </div>
+
+                    <div class="summary-box mb-3">
+                        <small class="text-muted">Gasto real</small>
+                        <h4 class="text-money" th:text="${totalRealProyecto}"></h4>
+                    </div>
+
+                    <div class="summary-box mb-3">
+                        <small class="text-muted">Diferencia</small>
+                        <h4 class="text-money" th:text="${diferenciaProyecto}"></h4>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Materiales</span>
+                        <strong th:text="${materialRealProyecto}"></strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Mano de obra directa</span>
+                        <strong th:text="${manoObraDirectaProyecto}"></strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Mano de obra indirecta</span>
+                        <strong th:text="${manoObraIndirectaProyecto}"></strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Transporte / Equipo</span>
+                        <strong th:text="${transporteProyecto}"></strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>EPP</span>
+                        <strong th:text="${eppProyecto}"></strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Subcontratos</span>
+                        <strong th:text="${subcontratosProyecto}"></strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Costos indirectos</span>
+                        <strong th:text="${costosIndirectosProyecto}"></strong>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
-
-<p th:if="${#lists.isEmpty(items)}">
-    Este proyecto aún no tiene ítems registrados.
-</p>
-
-<br>
-
-<a href="/proyectos">Volver a proyectos</a>
 
 </body>
 </html>

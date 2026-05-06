@@ -87,12 +87,16 @@ public class RegistroMaterial {
     }
 
     public void calcular() {
+
         if (cantidad == null) cantidad = BigDecimal.ZERO;
         if (costoUnitario == null) costoUnitario = BigDecimal.ZERO;
         if (iva == null) iva = BigDecimal.ZERO;
         if (activo == null) activo = true;
 
+        // COSTO REAL SIN IMPUESTOS
         subtotal = cantidad.multiply(costoUnitario);
-        total = subtotal.add(iva);
+
+        // IVA solo informativo
+        total = subtotal;
     }
 }

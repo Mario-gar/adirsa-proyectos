@@ -20,9 +20,11 @@ public class ProyectoController {
     private final RegistroMaterialRepository registroMaterialRepository;
     private final RegistroTransporteEquipoRepository registroTransporteEquipoRepository;
     private final RegistroSubcontratoRepository registroSubcontratoRepository;
+    private final RegistroCostoIndirectoRepository registroCostoIndirectoRepository;
+    private final MovimientoPendienteRepository movimientoPendienteRepository;
 
     public ProyectoController(ProyectoRepository proyectoRepository,
-                              ItemProyectoRepository itemProyectoRepository, RegistroManoObraRepository registroManoObraRepository, RegistroEppRepository registroEppRepository, RegistroMaterialRepository registroMaterialRepository,RegistroTransporteEquipoRepository registroTransporteEquipoRepository,RegistroSubcontratoRepository registroSubcontratoRepository) {
+                              ItemProyectoRepository itemProyectoRepository, RegistroManoObraRepository registroManoObraRepository, RegistroEppRepository registroEppRepository, RegistroMaterialRepository registroMaterialRepository,RegistroTransporteEquipoRepository registroTransporteEquipoRepository,RegistroSubcontratoRepository registroSubcontratoRepository, RegistroCostoIndirectoRepository registroCostoIndirectoRepository, MovimientoPendienteRepository movimientoPendienteRepository) {
         this.proyectoRepository = proyectoRepository;
         this.itemProyectoRepository = itemProyectoRepository;
         this.registroManoObraRepository = registroManoObraRepository;
@@ -30,6 +32,8 @@ public class ProyectoController {
         this.registroMaterialRepository = registroMaterialRepository;
         this.registroTransporteEquipoRepository = registroTransporteEquipoRepository;
         this.registroSubcontratoRepository = registroSubcontratoRepository;
+        this.registroCostoIndirectoRepository = registroCostoIndirectoRepository;
+        this.movimientoPendienteRepository = movimientoPendienteRepository;
     }
 
     @GetMapping("/proyectos")
@@ -85,6 +89,11 @@ public class ProyectoController {
                 "eppGlobal",
                 registroEppRepository.findByProyectoIdAndItemIsNullAndActivoTrue(id)
         );
+
+        model.addAttribute("costosIndirectos", registroCostoIndirectoRepository.findByProyectoIdAndActivoTrue(id));
+
+        model.addAttribute("movimientosPendientes",
+                movimientoPendienteRepository.findByProyectoIdAndEstadoAndActivoTrue(id, "PENDIENTE"));
 
         // =========================
         // 🔥 RESUMEN GLOBAL
@@ -150,12 +159,23 @@ public class ProyectoController {
                 .map(s -> s.getMonto() == null ? BigDecimal.ZERO : s.getMonto())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        BigDecimal costosIndirectosReal = registroCostoIndirectoRepository
+                .findByProyectoIdAndActivoTrue(id)
+                .stream()
+                .map(c -> c.getTotal() == null ? BigDecimal.ZERO : c.getTotal())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
         BigDecimal totalReal = materialReal
                 .add(manoObraDirecta)
                 .add(manoObraIndirectaTotal)
                 .add(transporteReal)
                 .add(eppReal)
-                .add(subcontratosReal);
+                .add(subcontratosReal)
+                .add(costosIndirectosReal);
+
+
+
 
         BigDecimal diferencia = presupuestoTotal.subtract(totalReal);
 
@@ -171,6 +191,7 @@ public class ProyectoController {
         model.addAttribute("diferenciaProyecto", diferencia);
         model.addAttribute("presupuestoDirecto", presupuestoDirecto);
         model.addAttribute("presupuestoTotal", presupuestoTotal);
+        model.addAttribute("costosIndirectosProyecto", costosIndirectosReal);
 
         return "proyectos/detalle";
     }

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Clasificar Movimiento</title>
+</head>
+<body>
+
+<h1>Clasificar movimiento pendiente</h1>
+
+<p><strong>Proyecto:</strong> <span th:text="${proyecto.nombre}"></span></p>
+<p><strong>Factura:</strong> <span th:text="${movimiento.numeroFactura}"></span></p>
+<p><strong>Proveedor:</strong> <span th:text="${movimiento.proveedor}"></span></p>
+<p><strong>Descripción:</strong> <span th:text="${movimiento.descripcion}"></span></p>
+<p><strong>Total sin IVA:</strong> <span th:text="${movimiento.total}"></span></p>
+
+<form th:action="@{/movimientos-pendientes/{id}/clasificar(id=${movimiento.id})}" method="post">
+
+    <label>Categoría destino:</label><br>
+    <select name="categoriaDestino" id="categoriaDestino" required>
+        <option value="">Seleccione</option>
+        <option value="MATERIAL">Material</option>
+        <option value="EPP_ITEM">EPP de ítem</option>
+        <option value="EPP_GLOBAL">EPP global</option>
+        <option value="TRANSPORTE_EQUIPO">Transporte / Equipo</option>
+        <option value="COSTO_INDIRECTO">Costo indirecto</option>
+        <option value="SUBCONTRATO">Subcontrato</option>
+    </select>
+
+    <br><br>
+
+    <div id="bloqueItem" style="display:none;">
+        <label>Ítem:</label><br>
+        <select name="itemId" id="itemId">
+            <option value="">Seleccione un ítem</option>
+            <option th:each="i : ${items}"
+                    th:value="${i.id}"
+                    th:text="${i.codigo + ' - ' + i.descripcion}">
+            </option>
+        </select>
+        <br><br>
+    </div>
+
+    <div id="bloqueCostoIndirecto" style="display:none;">
+        <label>Categoría costo indirecto:</label><br>
+        <select name="categoriaCostoIndirecto" id="categoriaCostoIndirecto">
+            <option value="">Seleccione</option>
+            <option value="ALIMENTACION">Alimentación</option>
+            <option value="HIGIENE_SEGURIDAD">Higiene y Seguridad</option>
+            <option value="ADMINISTRACION">Administración</option>
+            <option value="SERVICIOS">Servicios</option>
+            <option value="COMBUSTIBLE_GENERAL">Combustible general</option>
+            <option value="OTROS">Otros</option>
+        </select>
+        <br><br>
+    </div>
+
+    <div id="bloqueTransporte" style="display:none;">
+        <label>Clasificación transporte/equipo:</label><br>
+        <input type="text" name="clasificacionTransporte" id="clasificacionTransporte"
+               placeholder="Combustible, alquiler, transporte...">
+        <br><br>
+    </div>
+
+    <div id="bloqueSubcontrato" style="display:none;">
+        <label>Estado subcontrato:</label><br>
+        <select name="estadoSubcontrato" id="estadoSubcontrato">
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="EN_PROCESO">En proceso</option>
+            <option value="PAGADO">Pagado</option>
+            <option value="CANCELADO">Cancelado</option>
+        </select>
+        <br><br>
+    </div>
+
+    <button type="submit">Clasificar</button>
+
+</form>
+
+<br>
+
+<a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+    Volver al proyecto
+</a>
+
+<script>
+    const categoriaDestino = document.getElementById("categoriaDestino");
+    const bloqueItem = document.getElementById("bloqueItem");
+    const itemId = document.getElementById("itemId");
+
+    const bloqueCostoIndirecto = document.getElementById("bloqueCostoIndirecto");
+    const categoriaCostoIndirecto = document.getElementById("categoriaCostoIndirecto");
+
+    const bloqueTransporte = document.getElementById("bloqueTransporte");
+    const clasificacionTransporte = document.getElementById("clasificacionTransporte");
+
+    const bloqueSubcontrato = document.getElementById("bloqueSubcontrato");
+    const estadoSubcontrato = document.getElementById("estadoSubcontrato");
+
+    function actualizarFormulario() {
+        const valor = categoriaDestino.value;
+
+        const requiereItem = ["MATERIAL", "EPP_ITEM", "TRANSPORTE_EQUIPO", "SUBCONTRATO"].includes(valor);
+
+        bloqueItem.style.display = requiereItem ? "block" : "none";
+        itemId.required = requiereItem;
+
+        bloqueCostoIndirecto.style.display = valor === "COSTO_INDIRECTO" ? "block" : "none";
+        categoriaCostoIndirecto.required = valor === "COSTO_INDIRECTO";
+
+        bloqueTransporte.style.display = valor === "TRANSPORTE_EQUIPO" ? "block" : "none";
+        clasificacionTransporte.required = valor === "TRANSPORTE_EQUIPO";
+
+        bloqueSubcontrato.style.display = valor === "SUBCONTRATO" ? "block" : "none";
+        estadoSubcontrato.required = valor === "SUBCONTRATO";
+    }
+
+    categoriaDestino.addEventListener("change", actualizarFormulario);
+    actualizarFormulario();
+</script>
+
+</body>
+</html>

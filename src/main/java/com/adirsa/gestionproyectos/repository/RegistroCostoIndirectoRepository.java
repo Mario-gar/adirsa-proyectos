@@ -7,7 +7,5 @@ import java.util.List;
 
 public interface RegistroCostoIndirectoRepository extends JpaRepository<RegistroCostoIndirecto, Integer> {
 
-    List<RegistroCostoIndirecto> findByProyectoId(Integer proyectoId);
-
-    List<RegistroCostoIndirecto> findByProyectoIdAndCategoria(Integer proyectoId, String categoria);
+    List<RegistroCostoIndirecto> findByProyectoIdAndActivoTrue(Integer proyectoId);
 }

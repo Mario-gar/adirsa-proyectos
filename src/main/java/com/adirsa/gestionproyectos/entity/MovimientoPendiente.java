@@ -8,13 +8,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "registro_costos_indirectos")
+@Table(name = "movimientos_pendientes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegistroCostoIndirecto {
+public class MovimientoPendiente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,38 +24,45 @@ public class RegistroCostoIndirecto {
     @JoinColumn(name = "proyecto_id", nullable = false)
     private Proyecto proyecto;
 
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private ItemProyecto item;
+
     @Column(nullable = false)
     private LocalDate fecha;
-
-    @Column(length = 100)
-    private String categoria;
-
-    @Column(length = 150)
-    private String proveedor;
 
     @Column(name = "numero_factura", length = 100)
     private String numeroFactura;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 150)
+    private String proveedor;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(name = "unidad_medida", length = 50)
     private String unidadMedida;
 
-    @Column(precision = 14, scale = 2)
+    @Column(nullable = false, precision = 14, scale = 2)
     private BigDecimal cantidad = BigDecimal.ZERO;
 
-    @Column(name = "costo_unitario", precision = 14, scale = 2)
+    @Column(name = "costo_unitario", nullable = false, precision = 14, scale = 2)
     private BigDecimal costoUnitario = BigDecimal.ZERO;
 
-    @Column(precision = 14, scale = 2)
+    @Column(nullable = false, precision = 14, scale = 2)
     private BigDecimal subtotal = BigDecimal.ZERO;
 
-    @Column(precision = 14, scale = 2)
+    @Column(nullable = false, precision = 14, scale = 2)
     private BigDecimal iva = BigDecimal.ZERO;
 
-    @Column(precision = 14, scale = 2)
+    @Column(nullable = false, precision = 14, scale = 2)
     private BigDecimal total = BigDecimal.ZERO;
+
+    @Column(nullable = false, length = 50)
+    private String estado = "PENDIENTE";
+
+    @Column(name = "categoria_destino", length = 50)
+    private String categoriaDestino;
 
     @Column(nullable = false)
     private Boolean activo = true;
@@ -63,31 +70,37 @@ public class RegistroCostoIndirecto {
     @Column(name = "creado_en")
     private LocalDateTime creadoEn;
 
+    @Column(name = "actualizado_en")
+    private LocalDateTime actualizadoEn;
+
     @PrePersist
     public void prePersist() {
         this.creadoEn = LocalDateTime.now();
-        calcular();
+        preparar();
     }
 
     @PreUpdate
     public void preUpdate() {
-        calcular();
+        this.actualizadoEn = LocalDateTime.now();
+        preparar();
     }
 
-    public void calcular() {
+    public void preparar() {
 
         if (cantidad == null) cantidad = BigDecimal.ZERO;
         if (costoUnitario == null) costoUnitario = BigDecimal.ZERO;
 
-        // COSTO REAL SIN IMPUESTOS
         subtotal = cantidad.multiply(costoUnitario);
 
-        // IVA solo de referencia contable
+        // IVA solo informativo
         if (iva == null) {
             iva = BigDecimal.ZERO;
         }
 
-        // TOTAL DEL SISTEMA SIN IVA
+        // COSTO REAL SIN IVA
         total = subtotal;
+
+        if (estado == null || estado.isBlank()) estado = "PENDIENTE";
+        if (activo == null) activo = true;
     }
 }

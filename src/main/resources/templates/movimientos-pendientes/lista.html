@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Movimientos Pendientes</title>
+</head>
+<body>
+
+<h2 th:text="'Movimientos pendientes - ' + ${proyecto.nombre}"></h2>
+
+<a th:href="@{/proyectos/{id}/movimientos-pendientes/nuevo(id=${proyecto.id})}">
+    + Registrar manual
+</a>
+
+|
+
+<a th:href="@{/proyectos/{id}/movimientos-pendientes/importar(id=${proyecto.id})}">
+    Importar Excel
+</a>
+
+<br><br>
+
+<table border="1" cellpadding="5">
+
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Factura</th>
+        <th>Proveedor</th>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+        <th>Total</th>
+        <th>Estado</th>
+        <th>Acción</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="m : ${movimientos}">
+
+        <td th:text="${m.fecha}"></td>
+        <td th:text="${m.numeroFactura}"></td>
+        <td th:text="${m.proveedor}"></td>
+        <td th:text="${m.descripcion}"></td>
+        <td th:text="${m.cantidad}"></td>
+        <td th:text="${m.total}"></td>
+        <td th:text="${m.estado}"></td>
+
+        <td>
+
+            <a th:href="@{/movimientos-pendientes/{id}/clasificar(id=${m.id})}">
+                Clasificar
+            </a>
+
+            |
+
+            <form th:action="@{/movimientos-pendientes/{id}/anular(id=${m.id})}"
+                  method="post"
+                  style="display:inline;">
+
+                <button type="submit">
+                    Anular
+                </button>
+
+            </form>
+
+        </td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+<br>
+
+<a th:href="@{/proyectos/{id}(id=${proyecto.id})}">
+    Volver
+</a>
+
+</body>
+</html>
